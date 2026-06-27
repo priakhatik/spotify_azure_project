@@ -1,0 +1,15 @@
+{
+	"name": "dfactoryspotifyproject",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "243ce564-661e-4ef8-a22f-6f9df682f9d5",
+		"tenantId": "bf45cb20-d5ff-40b3-ab0b-41bd8002e430"
+	}
+}
