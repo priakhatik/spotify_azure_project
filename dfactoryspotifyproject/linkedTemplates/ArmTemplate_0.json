@@ -435,7 +435,10 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"container": "bronze",
-												"folder": "cdc",
+												"folder": {
+													"value": "@{pipeline().parameters.table}_cdc",
+													"type": "Expression"
+												},
 												"file": "empty.json"
 											}
 										}
@@ -532,6 +535,7 @@
 								"value": "@pipeline().parameters.loop_input",
 								"type": "Expression"
 							},
+							"isSequential": true,
 							"activities": [
 								{
 									"name": "AzureSQLtoLake",
@@ -601,7 +605,7 @@
 											"parameters": {
 												"container": "bronze",
 												"folder": {
-													"value": "@{item().table}_cdc",
+													"value": "@item().table",
 													"type": "Expression"
 												},
 												"file": {
@@ -864,7 +868,7 @@
 							"headers": {},
 							"url": "https://prod-00.northcentralus.logic.azure.com:443/workflows/0758d51e7c1140f78bba3d157e167474/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=v8shDlo_SnTcY_vOTJPnJzcTf5zlC5fN2nbZnKPQVak",
 							"body": {
-								"value": "{\n    \"pipeline_name\": \"@{pipeline().Pipeline}\"\n    \"pipeline_runId\" : \"{pipeline().RunId}\"\n}",
+								"value": "{\n    \"pipeline_name\": \"@{pipeline().Pipeline}\",\n    \"pipeline_runId\" : \"@{pipeline().RunId}\"\n}",
 								"type": "Expression"
 							}
 						}
