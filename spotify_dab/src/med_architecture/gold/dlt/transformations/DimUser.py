@@ -1,20 +1,20 @@
-import dlt
+from pyspark import pipelines as dp
 
-@dlt.table 
+
+@dp.view
 def dimuser_stg():
-    df = spark.readStream.table("spotify_cata.silver.DimUser")
-    return df
+    """Stream the Silver DimUser table into the Gold CDC flow."""
+    return spark.readStream.table("spotify_cata.silver.DimUser")
 
 
-dlt.create_streaming_table("dimuser")
+dp.create_streaming_table("dimuser")
 
+# ADF incremental ingestion uses updated_at as the DimUser CDC watermark.
+# Lakeflow uses the same source column to order changes for SCD Type 2 history.
 dp.create_auto_cdc_flow(
-  target = "dimuser",
-  source = "dimuser_stg",
-  keys = ["user_id"],
-  sequence_by = "<updated_at>",
-  stored_as_scd_type = "2",
-  track_history_except_column_list = None,
-  name = None,
-  once = False
+    target="dimuser",
+    source="dimuser_stg",
+    keys=["user_id"],
+    sequence_by="updated_at",
+    stored_as_scd_type="2",
 )
