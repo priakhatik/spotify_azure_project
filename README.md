@@ -68,7 +68,7 @@ spotify_azure_project/
 
 1. **Ingestion (ADF):** Parameterized pipelines pull source data (e.g. `DimUser`, `DimTrack`, `DimArtist`, `FactStream`) into the **Bronze** layer of ADLS Gen2, supporting both full and incremental loads via a loop-based control pipeline.
 2. **Bronze → Silver (Databricks Autoloader):** PySpark Structured Streaming with `cloudFiles` incrementally ingests raw Parquet files, applies schema evolution, and lands cleaned data in the **Silver** layer as Delta tables.
-3. **Silver → Gold (Lakeflow / DLT):** Declarative pipelines use `dlt.create_streaming_table` and `create_auto_cdc_flow` to apply **CDC (Change Data Capture)** and **SCD Type 2** history tracking, producing governed dimension and fact tables in Unity Catalog.
+3. **Silver → Gold (Lakeflow Pipelines):** Declarative pipeline code imports `pyspark.pipelines as dp`, uses `dp.create_streaming_table`, and applies `dp.create_auto_cdc_flow` for **CDC (Change Data Capture)** and **SCD Type 2** history tracking. `DimUser` sequences changes by the same `updated_at` watermark used by the ADF incremental-ingestion pipeline.
 4. **Dynamic SQL Generation:** A Jinja2-templated notebook builds parameterized `SELECT`/`JOIN` queries across dimension and fact tables for flexible ad-hoc analysis.
 
 ## 🔐 Unity Catalog Setup
