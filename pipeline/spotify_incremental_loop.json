@@ -335,13 +335,16 @@
 					"timeout": "0.12:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
+					"secureOutput": true,
+					"secureInput": true
 				},
 				"userProperties": [],
 				"typeProperties": {
 					"method": "POST",
-					"url": "https://prod-00.northcentralus.logic.azure.com:443/workflows/0758d51e7c1140f78bba3d157e167474/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=v8shDlo_SnTcY_vOTJPnJzcTf5zlC5fN2nbZnKPQVak",
+					"url": {
+					"value": "@pipeline().parameters.alert_webhook_url",
+					"type": "Expression"
+				},
 					"body": {
 						"value": "{\n    \"pipeline_name\": \"@{pipeline().Pipeline}\",\n    \"pipeline_runId\" : \"@{pipeline().RunId}\"\n}",
 						"type": "Expression"
@@ -350,6 +353,9 @@
 			}
 		],
 		"parameters": {
+			"alert_webhook_url": {
+				"type": "SecureString"
+			},
 			"loop_input": {
 				"type": "array",
 				"defaultValue": [
