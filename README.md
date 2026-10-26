@@ -88,6 +88,14 @@ databricks bundle validate
 databricks bundle deploy --target dev
 ```
 
+## 🔒 Alert webhook configuration
+
+The ADF `spotify_incremental_loop` pipeline no longer stores a signed Logic App webhook URL in source control. Supply the `alert_webhook_url` **SecureString** parameter at runtime through a trusted deployment/orchestration process; do not put the signed URL in parameter defaults, committed JSON, or CI logs. The Alerts Web activity has secure input and output logging enabled.
+
+**Required maintainer action:** The previous signed webhook URL was committed to Git history. Removing it from the current file does **not** revoke the old signature or erase it from historical commits. Rotate/revoke that Logic App callback URL in Azure, update the protected runtime value, and check for unauthorized invocations. The pipeline's alerting will not work until a valid replacement is provided.
+
+Run `python -m unittest discover -s tests -v` to check the JSON configuration and catch accidental reintroduction of inline signed URLs. This is a static configuration test, not an Azure integration test.
+
 ## 📌 Notes
 
 - Built as a hands-on portfolio project to demonstrate end-to-end Azure data engineering: orchestration, incremental ingestion, streaming transformations, CDC/SCD modeling, and Unity Catalog governance.
