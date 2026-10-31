@@ -52,7 +52,9 @@ display(df_user, checkpointLocation="abfss://silver@storagespotifyproject.dfs.co
 df_user_obj = reusable()
 
 df_user = df_user_obj.dropColumns(df_user,['_rescued_data'])
-df_user = df_user.dropDuplicates(['user_id'])
+# Preserve later updates for the same user: Gold DimUser SCD2 sequences on updated_at.
+# Deduplicating only by user_id would silently discard all later versions.
+df_user = df_user_obj.deduplicateUserChanges(df_user)
 display(df_user ,checkpointLocation="abfss://silver@storagespotifyproject.dfs.core.windows.net/DimUser/checkpoint/cp_drop")
 
 # COMMAND ----------
